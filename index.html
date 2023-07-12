@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:regular,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .wrapper {
+        max-width: 1600px;
+        background-color: #e9e9e9;
+        padding: 30px;
+        font-family: "Poppins", sans-serif;
+      }
+      h1 {
+        color: #00a8af;
+        font-size: 22px;
+      }
+      .info-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .input-block {
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+      }
+      .input-block img {
+        width: 20px;
+      }
+      #search {
+        padding: 5px 10px;
+        outline: none;
+        border: none;
+        border-bottom: 2px solid #00a8af;
+        background-color: transparent;
+      }
+      #search:focus {
+        font-weight: 700;
+        font-family: "Orelega One";
+        font-size: 16px;
+        transition: 0.3s ease 0s;
+      }
+      #city {
+        text-transform: capitalize;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .current-weather-block {
+        background-color: white;
+        padding: 20px;
+      }
+      .city-and-date-block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #00a8af;
+        font-weight: 700;
+      }
+      .current-weather-main-block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .current-weather-main-block-item {
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .current-weather-main-block-item > div > p {
+        display: flex;
+        column-gap: 30px;
+      }
+      #infoWeatherHTML {
+        text-transform: capitalize;
+      }
+      #tempreture {
+        font-size: 45px;
+        color: #00a8af;
+      }
+      #hourlyWeatherBlock {
+        margin-top: 30px;
+      }
+      #hourlyWeatherBlock p {
+        margin: 0;
+        margin-top: 5px;
+      }
+      .hourly-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #00a8af;
+      }
+      .hourly-block {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .hourly-block-item {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      .hourly-block-item p {
+        text-transform: capitalize;
+      }
+      .hourly-block .hourly-block-item:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: space-between;
+      }
+      .time {
+        font-weight: 700;
+      }
+
+      .not-found-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 20px;
+        padding-top: 50px;
+      }
+      .not-found-page > * {
+        margin: 0;
+      }
+      .not-found-page h2 {
+        color: coral;
+      }
+      .not-found-page h3 {
+        font-size: 20px;
+      }
+      .not-found-page p {
+        font-size: 16px;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="info-title">
+        <h1>CURRENT WEATHER</h1>
+        <div class="input-block">
+          <input type="text" id="search" placeholder="Search" />
+          <img
+            src="img/search-icon.svg"
+            id="searchIcon"
+            alt="Search Icon"
+            style="cursor: pointer"
+          />
+        </div>
+      </div>
+      <div id="generalInfo" style="display: none">
+        <div id="weatherBlockMain" class="current-weather-block">
+          <div class="city-and-date-block">
+            <p id="city">Kiev</p>
+            <p id="date">05.03.2020</p>
+          </div>
+          <div class="current-weather-main-block">
+            <div class="current-weather-main-block-item">
+              <p id="infoWeatherHTML">Sunny</p>
+              <img src="img/sunny.png" id="mainImg" alt="Sunny" />
+            </div>
+            <div class="current-weather-main-block-item">
+              <p id="tempreture">18<sup>&#9900;</sup>C</p>
+            </div>
+            <div class="current-weather-main-block-item">
+              <div>
+                <p>
+                  Min temperature
+                  <span id="minTemperature">16<sup>&#9900;</sup>C</span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Max temperature
+                  <span id="maxTemperature">22<sup>&#9900;</sup>C</span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Wind speed (km/h)
+                  <span id="windSpeed">3</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="hourlyWeatherBlock" class="hourly-weather-block">
+          <p class="hourly-title">Hourly</p>
+          <div id="hourlyBlock" class="hourly-block"></div>
+        </div>
+      </div>
+      <div class="not-found-page" id="notFoundPage" style="display: none">
+        <h2>404</h2>
+        <h3>NOT FOUND</h3>
+
+        <p>Please enter a different city</p>
+      </div>
+    </div>
+    <script type="text/javascript">
+      // values
+      let city = document.getElementById("city"),
+        weatherBlockMain = document.getElementById("weatherBlockMain"),
+        tempretureHTML = document.getElementById("tempreture"),
+        dateHTML = document.getElementById("date");
+      // values
+
+      search.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          getWeather();
+        }
+      });
+
+      searchIcon.addEventListener("click", (e) => {
+        getWeather();
+      });
+
+      function getWeather() {
+        var cityName = search.value;
+
+        document.getElementById("search").value = "";
+
+        if (cityName == "") {
+          alert("Введіть місто");
+        } else {
+          var request, request2;
+          if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest();
+            request2 = new XMLHttpRequest();
+          } else {
+            request = new ActiveXObject("Microsoft.XMLHTTP");
+            request2 = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+
+          request.open(
+            "GET",
+            "http://api.openweathermap.org/data/2.5/weather?q=" +
+              cityName +
+              "&units=metric&lang=ua&appid=f3934c1a9238bca9571253aeba83f5e8"
+          );
+          request2.open(
+            "GET",
+            "https://api.openweathermap.org/data/2.5/forecast?q=" +
+              cityName +
+              "&appid=f3934c1a9238bca9571253aeba83f5e8"
+          );
+
+          request.onload = function () {
+            if (request.status === 200) {
+              generalInfo.style.display = "block";
+              notFoundPage.style.display = "none";
+
+              // city
+              city.innerText = cityName;
+              // ---
+
+              // date
+              let weatherObject = JSON.parse(request.response),
+                timestamp = weatherObject.dt,
+                date = new Date(timestamp * 1000).toLocaleDateString();
+              dateHTML.innerText = date;
+              // ---
+
+              // weather description
+              infoWeatherHTML.innerText = weatherObject.weather[0].description;
+              // ---
+
+              // tempreture
+              tempreture.innerHTML =
+                Math.ceil(weatherObject.main.temp) + "<sup>&#9900;</sup>C";
+              // ---
+
+              // min tempreture
+              minTemperature.innerHTML =
+                weatherObject.main.temp_min + "<sup>&#9900;</sup>C";
+              // ---
+
+              // max tempreture
+              maxTemperature.innerHTML =
+                weatherObject.main.temp_max + "<sup>&#9900;</sup>C";
+              // ---
+
+              // wind speed
+              windSpeed.innerHTML = weatherObject.wind.speed;
+              // ---
+
+              // change image
+              if (weatherObject.weather[0].icon == "01d") {
+                imagePath = "img/sunny.png";
+              } else if (weatherObject.weather[0].icon == "01n") {
+                imagePath = "img/night.png";
+              } else if (weatherObject.weather[0].icon == "02d") {
+                imagePath = "img/sunny-cloudy.png";
+              } else if (weatherObject.weather[0].icon == "02n") {
+                imagePath = "img/night-cloudy.png";
+              } else if (
+                weatherObject.weather[0].icon == "03d" ||
+                weatherObject.weather[0].icon == "03n"
+              ) {
+                imagePath = "img/cloudy.png";
+              } else if (
+                weatherObject.weather[0].icon == "04d" ||
+                weatherObject.weather[0].icon == "04n"
+              ) {
+                imagePath = "img/very-cloudy.png";
+              } else if (
+                weatherObject.weather[0].icon == "09d" ||
+                weatherObject.weather[0].icon == "09n"
+              ) {
+                imagePath = "img/cloudy-rainy.png";
+              } else if (weatherObject.weather[0].icon == "10d") {
+                imagePath = "img/sunny-cloudy-rainy.png";
+              } else if (weatherObject.weather[0].icon == "10n") {
+                imagePath = "img/night-cloudy-light.png";
+              } else if (
+                weatherObject.weather[0].icon == "11d" ||
+                weatherObject.weather[0].icon == "11n"
+              ) {
+                imagePath = "img/cloudy-light.png";
+              } else if (
+                weatherObject.weather[0].icon == "13d" ||
+                weatherObject.weather[0].icon == "13n"
+              ) {
+                imagePath = "img/snow.png";
+              } else if (
+                weatherObject.weather[0].icon == "50d" ||
+                weatherObject.weather[0].icon == "50n"
+              ) {
+                imagePath = "img/mist.png";
+              }
+              document.getElementById("mainImg").src = imagePath;
+              // ---
+            } else if (request.status === 404) {
+              notFoundPage.style.display = "flex";
+              generalInfo.style.display = "none";
+            }
+          };
+
+          request2.onload = function () {
+            if (request2.status === 200) {
+              let weatherObject2 = JSON.parse(request2.response);
+              let weatherObject2List = weatherObject2.list.slice(0, 7);
+
+              let divInfo = document.createElement("div"),
+                infoDay = document.createElement("p"),
+                simpleDiv = document.createElement("div");
+
+              divInfo.setAttribute("class", "hourly-block-item");
+              divInfo.appendChild(infoDay);
+              infoDay.setAttribute("id", "day");
+              divInfo.appendChild(simpleDiv);
+
+              let infoForecast = document.createElement("p"),
+                infoTemp = document.createElement("p"),
+                infoWindSpeed = document.createElement("p");
+
+              infoForecast.innerText = "Forecast";
+              infoTemp.innerHTML = "Temp(<sup>&#9900;</sup>C)";
+              infoWindSpeed.innerText = "Wind (km/h)";
+
+              simpleDiv.appendChild(infoForecast);
+              simpleDiv.appendChild(infoTemp);
+              simpleDiv.appendChild(infoWindSpeed);
+
+              hourlyBlock.appendChild(divInfo);
+
+              for (i = 1; i < weatherObject2List.length; i++) {
+                var blockItem = document.createElement("div");
+                blockItem.setAttribute("class", "hourly-block-item");
+
+                hourlyBlock.appendChild(blockItem);
+
+                // day of the week
+                const date1 = new Date();
+                const options = { weekday: "long" };
+                const dayOfWeek = date1.toLocaleString("en-US", options);
+
+                infoDay.innerText = dayOfWeek;
+                // ---
+
+                // insert time
+                pTime = document.createElement("p");
+                pTime.setAttribute("class", "time");
+
+                pTime.innerHTML = weatherObject2List[i].dt_txt
+                  .substr(11, 14)
+                  .substr(0, 5);
+
+                blockItem.appendChild(pTime);
+                // insert time
+
+                // change image
+                tagImg = document.createElement("img");
+                tagImg.setAttribute("src", "/");
+
+                if (weatherObject2List[i].weather[0].icon == "01d") {
+                  tagImg.setAttribute("src", "img/sunny.png");
+                } else if (weatherObject2List[i].weather[0].icon == "01n") {
+                  tagImg.setAttribute("src", "img/night.png");
+                } else if (weatherObject2List[i].weather[0].icon == "02d") {
+                  tagImg.setAttribute("src", "img/sunny-cloudy.png");
+                } else if (weatherObject2List[i].weather[0].icon == "02n") {
+                  tagImg.setAttribute("src", "img/night-cloudy.png");
+                } else if (
+                  weatherObject2List[i].weather[0].icon == "03d" ||
+                  weatherObject2List[i].weather[0].icon == "03n"
+                ) {
+                  tagImg.setAttribute("src", "img/cloudy.png");
+                } else if (
+                  weatherObject2List[i].weather[0].icon == "04d" ||
+                  weatherObject2List[i].weather[0].icon == "04n"
+                ) {
+                  tagImg.setAttribute("src", "img/very-cloudy.png");
+                } else if (
+                  weatherObject2List[i].weather[0].icon == "09d" ||
+                  weatherObject2List[i].weather[0].icon == "09n"
+                ) {
+                  tagImg.setAttribute("src", "img/cloudy-rainy.png");
+                } else if (weatherObject2List[i].weather[0].icon == "10d") {
+                  tagImg.setAttribute("src", "img/sunny-cloudy-rainy.png");
+                } else if (weatherObject2List[i].weather[0].icon == "10n") {
+                  tagImg.setAttribute("src", "img/night-cloudy-light.png");
+                } else if (
+                  weatherObject2List[i].weather[0].icon == "11d" ||
+                  weatherObject2List[i].weather[0].icon == "11n"
+                ) {
+                  tagImg.setAttribute("src", "img/cloudy-light.png");
+                } else if (
+                  weatherObject2List[i].weather[0].icon == "13d" ||
+                  weatherObject2List[i].weather[0].icon == "13n"
+                ) {
+                  tagImg.setAttribute("src", "img/snow.png");
+                } else if (
+                  weatherObject2List[i].weather[0].icon == "50d" ||
+                  weatherObject2List[i].weather[0].icon == "50n"
+                ) {
+                  tagImg.setAttribute("src", "img/mist.png");
+                }
+                blockItem.appendChild(tagImg);
+                // change image
+
+                // insert forecast
+                pForecast = document.createElement("p");
+                pForecast.innerHTML = weatherObject2List[i].weather[0].main;
+                blockItem.appendChild(pForecast);
+                // insert forecast
+
+                // insert tempreture
+                pTemp = document.createElement("p");
+                pTemp.innerHTML =
+                  Math.ceil(weatherObject2List[i].main.temp - 273, 15) +
+                  " <sup>&#9900;</sup>C";
+                blockItem.appendChild(pTemp);
+                // insert tempreture
+
+                // insert wind speed
+                pWind = document.createElement("p");
+                pWind.innerHTML =
+                  Math.round(
+                    parseFloat(weatherObject2List[i].wind.speed) * 100
+                  ) / 100;
+                blockItem.appendChild(pWind);
+                // insert wind speed
+              }
+              searchIcon.addEventListener("click", () => {
+                hourlyBlock.innerHTML = "";
+              });
+              search.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                  hourlyBlock.innerHTML = "";
+                }
+              });
+            }
+          };
+          request.send();
+          request2.send();
+        }
+      }
+    </script>
+  </body>
+</html>
